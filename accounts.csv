@@ -1,0 +1,3 @@
+accountNumber,holderName,balance,isActive,createdAt,type,overdraftLimit
+0010329394,Prosper,16800,true,2026-04-09T07:47:40.7524482,SAVINGS,
+0029937811,Dan,2000000,true,2026-04-09T07:50:22.2733584,CURRENT,1000
