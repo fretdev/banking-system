@@ -49,5 +49,5 @@ build/
 *.log
 
 # CSV files
-# accounts.csv
-# transactions.csv
+accounts.csv
+transactions.csv
