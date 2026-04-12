@@ -13,6 +13,8 @@ public class Main{
 
         Bank bank = new Bank();
         bank.loadFromFile("accounts.csv","transactions.csv");
+        System.out.println("Status: Synchronizing account interests.....");
+        bank.applyInterestToAllSavings();
         String holderName;
         BigDecimal amount;
         boolean isRunning = true;

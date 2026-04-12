@@ -7,6 +7,7 @@ import com.bank.model.Transaction;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -67,14 +68,62 @@ public class Bank {
         transactions.add(withdrawTransaction);
         saveToFile("accounts.csv","transactions.csv");
     }
-    public void applyInterest(String accountNumber){
+    public void applyInterest(String accountNumber,boolean shouldSave){
         Account account = findAccount(accountNumber);
-        BigDecimal interest = account.calculateInterest();
-
-        Transaction transaction = new Transaction(accountNumber, Transaction.TransactionType.INTEREST,interest,account.getBalance());
-        transactions.add(transaction);
-        saveToFile("accounts.csv","transactions.csv");
+        if(account instanceof SavingsAccount sa){
+            BigDecimal interest = sa.calculateInterest();
+            if(interest.compareTo(BigDecimal.ZERO) > 0){
+                Transaction transaction = new Transaction(accountNumber, Transaction.TransactionType.INTEREST,interest,sa.getBalance());
+                transactions.add(transaction);
+                if(shouldSave){
+                    saveToFile("accounts.csv","transactions.csv");
+                }
+            }
+        }else{
+            System.out.println("Interest application skipped: "+accountNumber+" is not a Savings Account.");
+        }
     }
+   public void applyInterestToAllSavings(){
+       LocalDate today = LocalDate.now();
+       LocalDate lastRunDate = loadLastInterestDate();
+       if(lastRunDate == null || today.getMonth() != lastRunDate.getMonth() || today.getYear() != lastRunDate.getYear()){
+           boolean changesMade = false;
+           for(Account acc : accounts.values()){
+               if(acc instanceof SavingsAccount sa){
+                   applyInterest(acc.getAccountNumber(),false);
+                   changesMade = true;
+               }
+           }
+           if(changesMade){
+               saveToFile("accounts.csv","transactions.csv");
+               saveLastInterestDate(today);
+               System.out.println("System: Monthly interest applied successfully.");
+           }
+       }
+       else {
+           System.out.println("System: Interest already applied for this month. Skipping.......");
+       }
+   }
+   public void saveLastInterestDate(LocalDate date){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("system_config.txt"))){
+            writer.write(date.toString());
+        }
+        catch(IOException e){
+            System.out.println("Error saving system config: "+e.getMessage());
+        }
+   }
+   public LocalDate loadLastInterestDate(){
+        File file = new File("system_config.txt");
+        if(!file.exists()) return null;
+        try(BufferedReader reader = new BufferedReader(new FileReader(file))){
+            String line = reader.readLine();
+            if(line != null) return LocalDate.parse(line);
+        }
+        catch (IOException e){
+            System.out.println("Error reading system config.");
+        }
+        return null;
+   }
     public List<Account> getAllAccounts(){
         return new ArrayList<>(accounts.values());
     }

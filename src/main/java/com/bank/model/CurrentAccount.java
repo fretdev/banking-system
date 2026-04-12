@@ -38,9 +38,6 @@ public class CurrentAccount extends Account{
 
     @Override
     public BigDecimal calculateInterest() {
-        BigDecimal currentBalance = getBalance();
-        BigDecimal interest = currentBalance.multiply(interestRate);
-        addToBalance(interest);
-        return interest;
+        return BigDecimal.ZERO;
     }
 }

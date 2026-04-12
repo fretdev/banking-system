@@ -51,3 +51,4 @@ build/
 # CSV files
 accounts.csv
 transactions.csv
+system_config.txt

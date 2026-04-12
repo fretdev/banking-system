@@ -21,7 +21,9 @@ public class SavingsAccount extends Account{
     public BigDecimal calculateInterest(){
         BigDecimal currentBalance = getBalance();
         BigDecimal interest = currentBalance.multiply(interestRate);
-        addToBalance(interest);
+        if (interest.compareTo(BigDecimal.ZERO)> 0){
+            deposit(interest);
+        }
         return interest;
     }
 }
