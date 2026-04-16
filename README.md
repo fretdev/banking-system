@@ -22,13 +22,11 @@ mvn compile
 mvn exec:java -Dexec.mainClass="com.bank.ui.Main"
 ```
 ## Technologies
--Java 17
 
--Maven
-
--Junit 5
-
--File I/O
+- Java 17
+- Maven
+- JUnit 5
+- File I/O
 
 Author
 Ahmed Prosper
