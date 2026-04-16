@@ -34,6 +34,17 @@ public abstract class Account {
     }
 
     @Override
+    public String toString() {
+        return "Account{" +
+                "accountNumber='" + accountNumber + '\'' +
+                ", holderName='" + holderName + '\'' +
+                ", balance=" + balance +
+                ", isActive=" + isActive +
+                ", createdAt=" + createdAt +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;

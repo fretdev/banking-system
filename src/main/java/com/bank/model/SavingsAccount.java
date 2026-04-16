@@ -13,6 +13,7 @@ public class SavingsAccount extends Account{
         super(accountNumber, holderName, balance, isActive, createdAt);
         this.interestRate = new BigDecimal("0.04");
     }
+
     @Override
     public String getType(){
         return "SAVINGS";

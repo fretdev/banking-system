@@ -8,13 +8,13 @@ public class CurrentAccount extends Account{
 
     public CurrentAccount(String holderName, BigDecimal balance, boolean isActive, LocalDateTime createdAt){
         super(holderName,balance,isActive,createdAt,"002");
-        this.interestRate = new BigDecimal("0.01");
+        this.interestRate = BigDecimal.ZERO;
         this.overdraftLimit =new BigDecimal("1000");
     }
     public CurrentAccount(String accountNumber, String holderName, BigDecimal balance,
                           boolean isActive, LocalDateTime createdAt, BigDecimal overdraftLimit) {
         super(accountNumber, holderName, balance, isActive, createdAt);
-        this.interestRate = new BigDecimal("0.01");
+        this.interestRate = BigDecimal.ZERO;
         this.overdraftLimit = overdraftLimit;
     }
     public BigDecimal getOverdraftLimit(){
