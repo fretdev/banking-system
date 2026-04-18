@@ -17,6 +17,14 @@ public class Transaction {
     private final BigDecimal balanceAfter;
     private final LocalDateTime timeStamp;
 
+    /**
+     * Creates a new transaction record.
+     * @param accountNumber the account this transaction belongs to
+     * @param type the type of transaction (DEPOSIT, WITHDRAWAL, INTEREST, ACCOUNT_CREATION)
+     * @param amount the amount of money involved
+     * @param balanceAfter the account balance after this transaction
+     * @throws IllegalArgumentException if any parameter is invalid
+     */
     public Transaction(String accountNumber,TransactionType type,BigDecimal amount,BigDecimal balanceAfter){
         if(accountNumber == null || accountNumber.trim().isEmpty()){
             throw new IllegalArgumentException("Account number cannot be null or empty");

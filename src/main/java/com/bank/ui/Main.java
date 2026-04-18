@@ -197,7 +197,7 @@ public class Main{
                 System.out.println("Account number must be 10 digits");
             } else {
                 try {
-                   return bank.findAccount(accountNumber);
+                   return bank.findAccount(accountNumber).orElseThrow(()->new IllegalArgumentException("Account not found"));
                 } catch (IllegalArgumentException e) {
                     System.out.println("Error " + e.getMessage());
                 }

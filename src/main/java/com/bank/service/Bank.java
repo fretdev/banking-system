@@ -10,10 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Bank {
@@ -25,6 +22,12 @@ public class Bank {
         this.transactions = new ArrayList<>();
     }
 
+    /**
+     * Creates a new savings account.
+     * @param holderName the account holder's name
+     * @param initialDeposit the starting balance
+     * @return the newly created account
+     */
     public Account createSavingsAccount(String holderName, BigDecimal initialDeposit){
         Account newAccount = new SavingsAccount(holderName,initialDeposit,true, LocalDateTime.now());
 
@@ -36,6 +39,13 @@ public class Bank {
         saveToFile("accounts.csv","transactions.csv");
         return newAccount;
     }
+
+    /**
+     * Creates a new current account
+     * @param holderName the account holder's name
+     * @param initialDeposit the starting balance
+     * @return the newly created account
+     */
     public Account createCurrentAccount(String holderName,BigDecimal initialDeposit){
         Account newAccount = new CurrentAccount(holderName,initialDeposit,true,LocalDateTime.now());
         accounts.put(newAccount.getAccountNumber(),newAccount);
@@ -44,24 +54,41 @@ public class Bank {
         saveToFile("accounts.csv","transactions.csv");
         return newAccount;
     }
-    public Account findAccount(String accountNumber){
+
+    /**
+     * Finds an account by its account number.
+     * @param accountNumber the account number to search for
+     * @return the found account
+     * @throws IllegalArgumentException if account not found
+     */
+    public Optional<Account> findAccount(String accountNumber){
         nullChecker(accountNumber);
-        Account found = accounts.get(accountNumber);
-        if(found == null){
-            throw new IllegalArgumentException("Account not found: "+accountNumber);
-        }
-        return found;
+        return Optional.ofNullable(accounts.get(accountNumber));
     }
+
+    /**
+     * Deposits money into an account.
+     * @param accountNumber the account to deposit into
+     * @param amount the amount to deposit
+     * @throws IllegalArgumentException if account not found or amount invalid
+     */
     public void deposit(String accountNumber,BigDecimal amount){
-        Account account = findAccount(accountNumber);
+        Account account = findAccount(accountNumber).orElseThrow(()->new IllegalArgumentException("Account not found: "+ accountNumber));
         account.deposit(amount);
 
         Transaction depositTransaction = new Transaction(accountNumber,Transaction.TransactionType.DEPOSIT,amount,account.getBalance());
         transactions.add(depositTransaction);
         saveToFile("accounts.csv","transactions.csv");
     }
+
+    /**
+     * Withdraws money from an account
+     * @param accountNumber the account to withdraw from
+     * @param amount the amount to withdraw
+     * @throws IllegalArgumentException if account not found, amount invalid, or insufficient funds
+     */
     public void withdraw(String accountNumber,BigDecimal amount){
-        Account account = findAccount(accountNumber);
+        Account account = findAccount(accountNumber).orElseThrow(()->new IllegalArgumentException("Account not found: "+accountNumber));
         account.withdraw(amount);
 
         Transaction withdrawTransaction = new Transaction(accountNumber,Transaction.TransactionType.WITHDRAWAL,amount,account.getBalance());
@@ -69,7 +96,7 @@ public class Bank {
         saveToFile("accounts.csv","transactions.csv");
     }
     public void applyInterest(String accountNumber,boolean shouldSave){
-        Account account = findAccount(accountNumber);
+        Account account = findAccount(accountNumber).orElseThrow(()->new IllegalArgumentException("Account not found: "+accountNumber));
         if(account instanceof SavingsAccount sa){
             BigDecimal interest = sa.calculateInterest();
             if(interest.compareTo(BigDecimal.ZERO) > 0){

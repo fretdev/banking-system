@@ -83,13 +83,23 @@ public abstract class Account {
         return createdAt;
     }
 
-
+    /**
+     * Deposits money into the account.
+     * @param amount the amount to deposit (must be positive)
+     * @throws IllegalArgumentException if amount is null or not positive
+     */
     public void deposit(BigDecimal amount){
        if(amount == null || amount.compareTo(BigDecimal.ZERO) <= 0){
            throw new IllegalArgumentException("Deposit amount must be positive");
        }
         addToBalance(amount);
     }
+
+    /**
+     * Withdraws money from the account.
+     * @param amount amount to withdraw (must be positive)
+     * @throws IllegalArgumentException if amount exceeds available balance
+     */
     public void withdraw(BigDecimal amount){
         if(amount == null || amount.compareTo(BigDecimal.ZERO) <= 0){
             throw new IllegalArgumentException("Withdrawal amount must be positive");
@@ -99,6 +109,11 @@ public abstract class Account {
         }
         subtractFromBalance(amount);
     }
+
+    /**
+     * Calculates and adds interest to the account balance.
+     * @return the amount of interest added
+     */
     public abstract BigDecimal calculateInterest();
     public abstract String getType();
 }

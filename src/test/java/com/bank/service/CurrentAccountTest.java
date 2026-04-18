@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class CurrentAccountTest {
+public class  CurrentAccountTest {
     private CurrentAccount account;
     @BeforeEach
     void sampleAccount(){

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,26 +19,28 @@ public class BankTest {
     }
     @Test
     void createSavingsAccountShouldAddAccount(){
+        int sizeBefore = bank.getAllAccounts().size();
         Account savingsAccount = bank.createSavingsAccount("Prosper",new BigDecimal("7000"));
-        assertEquals(1,bank.getAllAccounts().size());
+        assertEquals(sizeBefore + 1 ,bank.getAllAccounts().size());
         assertNotNull(savingsAccount.getAccountNumber());
     }
     @Test
     void createCurrentAccountShouldAddAccount(){
+        int sizeBefore = bank.getAllAccounts().size();
         Account currentAccount = bank.createCurrentAccount("Prosper",new BigDecimal("7000"));
-        assertEquals(1,bank.getAllAccounts().size());
+        assertEquals(sizeBefore + 1,bank.getAllAccounts().size());
         assertNotNull(currentAccount.getAccountNumber());
     }
     @Test
     void findAccountShouldReturnAccountThatExists(){
-        Account found = bank.findAccount(account.getAccountNumber());
-        assertEquals(account.getAccountNumber(),found.getAccountNumber());
+        Optional<Account> found = bank.findAccount(account.getAccountNumber());
+        assertTrue(found.isPresent());
+        assertEquals(account.getAccountNumber(),found.get().getAccountNumber());
     }
     @Test
-    void findAccountShouldThrowErrorWhenNotFound(){
-        assertThrows(IllegalArgumentException.class,()->{
-            bank.findAccount("null");
-        });
+    void findAccountShouldReturnEmptyWhenAccountNotFound(){
+        Optional<Account> found = bank.findAccount("Non Existent");
+        assertFalse(found.isPresent());
     }
     @Test
     void depositShouldIncreaseBalance(){
